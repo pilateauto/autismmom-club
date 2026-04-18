@@ -1,15 +1,18 @@
+import Image from 'next/image';
+
 export default function FeaturedWin() {
   return (
     <section className="py-24 bg-surface w-full">
       <div className="max-w-5xl mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center gap-12">
-          {/* Image Placeholder */}
+          {/* Image */}
           <div className="w-full md:w-5/12 aspect-square md:aspect-[4/5] bg-border rounded-2xl overflow-hidden relative group">
-             <div className="absolute inset-0 flex items-center justify-center text-foreground/40 font-body text-sm">
-               [Candid Mom Photo]
-             </div>
-             {/* Fallback pattern until image is generated */}
-             <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 to-transparent mix-blend-overlay" />
+             <Image 
+               src="/featured-win.png" 
+               alt="A candid photo of a mom and her son looking at a visual schedule"
+               fill
+               className="object-cover transition-transform duration-700 group-hover:scale-105"
+             />
           </div>
 
           <div className="w-full md:w-7/12 flex flex-col justify-center">
