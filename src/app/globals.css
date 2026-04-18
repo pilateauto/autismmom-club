@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+:root {
+  --background: #FAFAF7;
+  --foreground: #1A1A1A;
+  --surface: #F2F2EE;
+  --border: #E5E5E0;
+  
+  --gradient-start: #E6A8B5;
+  --gradient-via-1: #E6B89E;
+  --gradient-via-2: #E6D89E;
+  --gradient-via-3: #A8E6B5;
+  --gradient-via-4: #9EE6D8;
+  --gradient-end: #9EB5E6;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  
+  --color-gradient-start: var(--gradient-start);
+  --color-gradient-via-1: var(--gradient-via-1);
+  --color-gradient-via-2: var(--gradient-via-2);
+  --color-gradient-via-3: var(--gradient-via-3);
+  --color-gradient-via-4: var(--gradient-via-4);
+  --color-gradient-end: var(--gradient-end);
+
+  --font-sans: var(--font-space-grotesk), sans-serif;
+  --font-serif: var(--font-source-serif), serif;
+  --font-body: var(--font-inter), sans-serif;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+}
+
+.text-gradient {
+  background: linear-gradient(to right, var(--gradient-start), var(--gradient-via-1), var(--gradient-via-2), var(--gradient-via-3), var(--gradient-via-4), var(--gradient-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.bg-gradient-accent {
+  background: linear-gradient(to right, var(--gradient-start), var(--gradient-via-1), var(--gradient-via-2), var(--gradient-via-3), var(--gradient-via-4), var(--gradient-end));
+}
