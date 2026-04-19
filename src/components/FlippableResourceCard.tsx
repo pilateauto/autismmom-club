@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Share, MessageCircle, ArrowLeft, Send } from "lucide-react";
 import { Resource } from "@/data/resources";
@@ -16,6 +16,23 @@ export default function FlippableResourceCard({ resource }: Props) {
     { id: "2", author: "Lisa M.", text: "Going to try this tomorrow, wish me luck." }
   ]);
   const [newComment, setNewComment] = useState("");
+  const [isCopied, setIsCopied] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("amc_comments_" + resource.slug);
+    if (saved) {
+      try {
+        setComments(JSON.parse(saved));
+      } catch(e) {}
+    }
+  }, [resource.slug]);
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
@@ -25,10 +42,12 @@ export default function FlippableResourceCard({ resource }: Props) {
     e.preventDefault();
     if (!newComment.trim()) return;
     
-    setComments([
+    const updated = [
       ...comments,
       { id: Date.now().toString(), author: "You", text: newComment }
-    ]);
+    ];
+    setComments(updated);
+    localStorage.setItem("amc_comments_" + resource.slug, JSON.stringify(updated));
     setNewComment("");
   };
 
@@ -79,8 +98,13 @@ export default function FlippableResourceCard({ resource }: Props) {
                 <MessageCircle className="w-4 h-4" />
                 Comments
               </button>
-              <button className="text-foreground/50 hover:text-primary transition-colors p-2 bg-surface rounded-full border border-border/50 hover:shadow-md">
+              <button onClick={handleShare} className="text-foreground/50 hover:text-primary transition-colors p-2 bg-surface rounded-full border border-border/50 hover:shadow-md relative">
                 <Share className="w-5 h-5" />
+                {isCopied && (
+                  <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded shadow pointer-events-none whitespace-nowrap">
+                    Copied!
+                  </span>
+                )}
               </button>
             </div>
           </div>
