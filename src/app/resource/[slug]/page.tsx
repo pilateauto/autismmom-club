@@ -1,16 +1,36 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { RESOURCES } from "@/data/resources";
+import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import FlippableResourceCard from "@/components/FlippableResourceCard";
 
+// export const dynamicParams = true; // this is default
+
 export default async function ResourcePage({ params }: { params: { slug: string } }) {
   const p = await params;
   const slug = p?.slug;
-  const resource = RESOURCES.find(r => r.slug === slug);
 
+  // 1. Try to find in local static mock data
+  let resource: any = RESOURCES.find(r => r.slug === slug);
+
+  // 2. If not found locally, fetch from Supabase
+  if (!resource) {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("resources")
+      .select("*")
+      .eq("slug", slug)
+      .single();
+      
+    if (data && !error) {
+      resource = data;
+    }
+  }
+
+  // 3. If STILL not found, throw 404
   if (!resource) {
     notFound();
   }
