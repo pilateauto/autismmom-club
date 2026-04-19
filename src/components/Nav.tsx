@@ -1,18 +1,23 @@
+"use client";
 import Link from 'next/link';
+import { useState } from 'react';
+import { Menu, X } from 'lucide-react';
 import styles from '@/components/ui/glitch-nav.module.css';
 
 export default function Nav() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <nav className="shrink-0 sticky top-0 z-50 h-20 bg-background/90 backdrop-blur-md border-b border-border w-full flex items-center shadow-sm">
-      <div className="w-full mx-auto px-6 flex items-center justify-between">
+    <nav className="shrink-0 sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-border w-full shadow-sm">
+      <div className="w-full mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
         {/* Left: Logo */}
-        <div className="flex-shrink-0 mr-8">
+        <div className="flex-shrink-0">
           <Link href="/" className="font-sans text-xl md:text-2xl font-bold text-gradient whitespace-nowrap">
             Autism Moms Club
           </Link>
         </div>
         
-        {/* Middle: Glitch Links (Hidden on small screens, flex on large) */}
+        {/* Middle: Glitch Links (Hidden on mobile) */}
         <div className="hidden xl:flex items-center justify-center gap-6 lg:gap-8 flex-1 overflow-x-auto hide-scrollbar">
           <GlitchLink href="/toolkit/food" text="Recipes" />
           <GlitchLink href="/toolkit/routines" text="Routines" />
@@ -23,13 +28,40 @@ export default function Nav() {
           <GlitchLink href="/wall" text="Wall" />
         </div>
         
-        {/* Right: Button */}
-        <div className="flex-shrink-0 ml-8">
-          <Link href="/submit" className="inline-flex items-center justify-center bg-gradient-accent text-white font-body text-sm rounded-full px-6 py-2.5 hover:opacity-90 transition-opacity hover:scale-[1.02] active:scale-[0.98] shadow-md whitespace-nowrap font-bold">
-            Share a Win
-          </Link>
+        {/* Right: Submit Button & Hamburger */}
+        <div className="flex items-center gap-4 flex-shrink-0">
+          <div className="hidden sm:block">
+            <Link href="/submit" className="inline-flex items-center justify-center bg-gradient-accent text-white font-body text-sm rounded-full px-6 py-2.5 hover:opacity-90 transition-opacity hover:scale-[1.02] active:scale-[0.98] shadow-md whitespace-nowrap font-bold">
+              Share a Win
+            </Link>
+          </div>
+          <button 
+            className="xl:hidden p-2 text-foreground/80 hover:bg-surface rounded-lg transition-colors"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {isOpen && (
+        <div className="xl:hidden border-t border-border/50 bg-white/95 backdrop-blur-xl absolute top-20 left-0 w-full shadow-2xl p-4 flex flex-col gap-2">
+          <MobileLink href="/toolkit/food" text="Recipes" onClick={() => setIsOpen(false)} />
+          <MobileLink href="/toolkit/routines" text="Routines" onClick={() => setIsOpen(false)} />
+          <MobileLink href="/toolkit/sensory" text="Sensory" onClick={() => setIsOpen(false)} />
+          <MobileLink href="/toolkit/communication" text="Communication" onClick={() => setIsOpen(false)} />
+          <MobileLink href="/toolkit/reviews" text="Reviews" onClick={() => setIsOpen(false)} />
+          <MobileLink href="/toolkit/school" text="School" onClick={() => setIsOpen(false)} />
+          <MobileLink href="/wall" text="Wall" onClick={() => setIsOpen(false)} />
+          <div className="mt-4 pt-4 border-t border-border/50 sm:hidden">
+            <Link href="/submit" onClick={() => setIsOpen(false)} className="flex items-center justify-center bg-gradient-accent text-white font-body text-sm rounded-xl w-full px-6 py-3 shadow-md font-bold">
+              Share a Win
+            </Link>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
@@ -39,6 +71,14 @@ function GlitchLink({ href, text }: { href: string; text: string }) {
     <Link href={href} className={styles.glitchBtn} data-text={text}>
       {text}
       <span className={styles.hoverBg}></span>
+    </Link>
+  );
+}
+
+function MobileLink({ href, text, onClick }: { href: string; text: string; onClick: () => void }) {
+  return (
+    <Link href={href} onClick={onClick} className="block w-full py-3 px-4 font-serif text-lg text-foreground hover:bg-surface rounded-xl transition-colors">
+      {text}
     </Link>
   );
 }
