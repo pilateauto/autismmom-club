@@ -1,0 +1,38 @@
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
+import { RESOURCES } from "@/data/resources";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+import FlippableResourceCard from "@/components/FlippableResourceCard";
+
+export default async function ResourcePage({ params }: { params: { slug: string } }) {
+  const p = await params;
+  const slug = p?.slug;
+  const resource = RESOURCES.find(r => r.slug === slug);
+
+  if (!resource) {
+    notFound();
+  }
+
+  return (
+    <main className="min-h-screen flex flex-col bg-surface/30">
+      <Nav />
+      <div className="pt-32 pb-16 px-6 md:px-12 max-w-3xl mx-auto w-full flex-1">
+        
+        <Link href={`/toolkit/${resource.category}`} className="inline-flex items-center text-sm font-body text-foreground/60 hover:text-primary transition-colors mb-8 group">
+          <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+          Back to {resource.category}
+        </Link>
+
+        <FlippableResourceCard resource={resource} />
+
+      </div>
+      <Footer />
+    </main>
+  );
+}
+
+export function generateStaticParams() {
+  return RESOURCES.map(r => ({ slug: r.slug }));
+}

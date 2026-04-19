@@ -1,54 +1,56 @@
-import { Apple, Clock, Headphones, MessageSquare, Star, BookOpen } from 'lucide-react';
+"use client";
+import Link from "next/link";
 
 const CATEGORIES = [
   {
-    title: "Food",
+    title: "Recipes", slug: "food",
     description: "Texture, safe foods, and sensory-friendly recipes.",
-    icon: Apple
+    emoji: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Bento%20Box.png"
   },
   {
-    title: "Routines",
+    title: "Routines", slug: "routines",
     description: "Mornings, transitions, bedtime, and meltdowns.",
-    icon: Clock
+    emoji: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Sun%20Behind%20Cloud.png"
   },
   {
-    title: "Sensory",
+    title: "Sensory", slug: "sensory",
     description: "Tools, spaces, and regulation strategies.",
-    icon: Headphones
+    emoji: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Musical%20Notes.png"
   },
   {
-    title: "Communication",
+    title: "Communication", slug: "communication",
     description: "AAC, scripts, and shutdown vs. meltdown.",
-    icon: MessageSquare
+    emoji: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Studio%20Microphone.png"
   },
   {
-    title: "Reviews",
+    title: "Reviews", slug: "reviews",
     description: "Honest, non-affiliate product reviews from parents.",
-    icon: Star
+    emoji: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Star.png"
   },
   {
-    title: "School",
+    title: "School", slug: "school",
     description: "IEPs, providers, and insurance navigation.",
-    icon: BookOpen
+    emoji: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Backpack.png"
   }
 ];
 
 export default function Categories() {
   return (
     <section className="py-24 px-6 md:px-12 max-w-6xl mx-auto">
-      <h2 className="text-3xl font-sans text-foreground mb-12">Explore the Toolkit</h2>
+      <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-12 text-center md:text-left">Explore the Toolkit</h2>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {CATEGORIES.map((cat, i) => (
-          <div key={i} className="bg-white rounded-2xl border border-border p-6 hover:shadow-md transition-shadow cursor-pointer group">
-            <div className="w-12 h-12 bg-surface rounded-full flex items-center justify-center mb-6 text-foreground group-hover:scale-110 transition-transform">
-              <cat.icon size={24} strokeWidth={1.5} />
+          <Link href={`/toolkit/${cat.slug}`} key={i} className="bg-white rounded-[32px] border border-border/50 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col items-center text-center relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-b from-surface/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="w-24 h-24 mb-6 flex items-center justify-center transition-transform duration-500 group-hover:scale-110 drop-shadow-xl relative z-10">
+              <img src={cat.emoji} alt={cat.title} className="w-full h-full object-contain drop-shadow-md" />
             </div>
-            <h3 className="text-xl font-sans text-foreground mb-2">{cat.title}</h3>
-            <p className="text-base font-serif text-foreground/80 leading-relaxed">
+            <h3 className="text-2xl font-serif text-foreground mb-3 relative z-10 group-hover:text-primary transition-colors">{cat.title}</h3>
+            <p className="text-base font-body text-foreground/70 leading-relaxed relative z-10">
               {cat.description}
             </p>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

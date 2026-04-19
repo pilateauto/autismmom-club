@@ -1,11 +1,13 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 :root {
   --background: #FAFAF7;
   --foreground: #1A1A1A;
   --surface: #F2F2EE;
   --border: #E5E5E0;
-  
+
   --gradient-start: #E6A8B5;
   --gradient-via-1: #E6B89E;
   --gradient-via-2: #E6D89E;
@@ -19,7 +21,7 @@
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
   --color-border: var(--border);
-  
+
   --color-gradient-start: var(--gradient-start);
   --color-gradient-via-1: var(--gradient-via-1);
   --color-gradient-via-2: var(--gradient-via-2);
@@ -30,6 +32,53 @@
   --font-sans: var(--font-space-grotesk), sans-serif;
   --font-serif: var(--font-source-serif), serif;
   --font-body: var(--font-inter), sans-serif;
+  --animate-first: moveVertical 30s ease infinite;
+  --animate-second: moveInCircle 20s reverse infinite;
+  --animate-third: moveInCircle 40s linear infinite;
+  --animate-fourth: moveHorizontal 40s ease infinite;
+  --animate-fifth: moveInCircle 20s ease infinite;
+  @keyframes moveHorizontal {
+  0% {
+    transform: translateX(-50%) translateY(-10%);
+    }
+  50% {
+    transform: translateX(50%) translateY(10%);
+    }
+  100% {
+    transform: translateX(-50%) translateY(-10%);
+    }
+  }
+  @keyframes moveInCircle {
+  0% {
+    transform: rotate(0deg);
+    }
+  50% {
+    transform: rotate(180deg);
+    }
+  100% {
+    transform: rotate(360deg);
+    }
+  }
+  @keyframes moveVertical {
+  0% {
+    transform: translateY(-50%);
+    }
+  50% {
+    transform: translateY(50%);
+    }
+  100% {
+    transform: translateY(-50%);
+    }
+  }
+  --animate-grid: grid 15s linear infinite;
+  @keyframes grid {
+  0% {
+    transform: translateY(-50%);
+    }
+  100% {
+    transform: translateY(0);
+    }
+  }
 }
 
 body {

@@ -18,7 +18,7 @@ const sourceSerif = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
-  title: "Autism Mom Club",
+  title: "Autism Moms Club",
   description: "Real wins for real life. A community platform for moms of autistic children.",
 };
 
