@@ -8,6 +8,7 @@ import { ArrowLeft } from "lucide-react";
 import FlippableResourceCard from "@/components/FlippableResourceCard";
 
 export const dynamicParams = true;
+export const dynamic = "force-dynamic";
 
 export default async function ResourcePage({ params }: { params: { slug: string } }) {
   const p = await params;
