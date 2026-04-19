@@ -48,7 +48,7 @@ export default function SubmitForm() {
     } catch (err) {
       console.error("Submission failed", err);
       setIsSubmitting(false);
-      setIsSubmitted(true);
+      alert("An unexpected error occurred. Please try again.");
     }
   };
 

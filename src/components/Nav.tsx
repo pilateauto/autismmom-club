@@ -8,7 +8,7 @@ export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="shrink-0 sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-border w-full shadow-sm">
+    <nav className="shrink-0 sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-border/50 w-full shadow-sm">
       <div className="w-full mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
         {/* Left: Logo */}
         <div className="flex-shrink-0">

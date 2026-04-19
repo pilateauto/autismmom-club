@@ -41,7 +41,7 @@ export default function Categories() {
       
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {CATEGORIES.map((cat, i) => (
-          <Link href={`/toolkit/${cat.slug}`} key={i} className="bg-white rounded-[32px] border border-border/50 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col items-center text-center relative overflow-hidden">
+          <Link href={`/toolkit/${cat.slug}`} key={i} className="bg-white rounded-[32px] border border-border/50 p-8 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col items-center text-center justify-start relative overflow-hidden h-full min-h-[320px]">
             <div className="absolute inset-0 bg-gradient-to-b from-surface/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="w-24 h-24 mb-6 flex items-center justify-center transition-transform duration-500 group-hover:scale-110 drop-shadow-xl relative z-10">
               <img src={cat.emoji} alt={cat.title} className="w-full h-full object-contain drop-shadow-md" />

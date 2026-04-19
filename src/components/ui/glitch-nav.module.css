@@ -27,7 +27,7 @@
   inset: 0;
   overflow: hidden;
   transition: width 0.4s ease-out;
-  background: linear-gradient(to right, var(--gradient-start), var(--gradient-via-1), var(--gradient-via-2), var(--gradient-via-3), var(--gradient-via-4), var(--gradient-end));
+  background: linear-gradient(to right, #E6A8B5, #E6B89E, #A8E6B5, #9EE6D8);
   border-radius: 0.5rem;
   z-index: -1;
 }
