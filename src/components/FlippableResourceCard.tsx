@@ -50,7 +50,7 @@ export default function FlippableResourceCard({ resource }: Props) {
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
 
           <div className="w-24 h-24 mb-8 flex items-center justify-center bg-surface rounded-3xl shrink-0 drop-shadow-xl relative z-10">
-            <img src={resource.emoji} alt="Icon" className="w-16 h-16 object-contain" />
+            <img src={resource.emoji || ""} alt="Icon" className="w-16 h-16 object-contain" />
           </div>
 
           <div className="flex gap-2 flex-wrap mb-4 relative z-10">
@@ -60,17 +60,17 @@ export default function FlippableResourceCard({ resource }: Props) {
           </div>
 
           <h1 className="text-3xl md:text-5xl font-serif text-foreground mb-6 leading-tight relative z-10">
-            {resource.title}
+            {resource.title || "Untitled"}
           </h1>
 
           <div className="flex items-center justify-between border-b border-border/40 pb-8 mb-8 relative z-10">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gradient-accent flex items-center justify-center text-white font-serif font-bold shadow-inner">
-                {resource.author.charAt(0)}
+                {(resource.author || "?").charAt(0)}
               </div>
               <div>
-                <p className="font-bold text-foreground text-sm">{resource.author}</p>
-                <p className="text-xs text-foreground/60">{resource.readTime} read</p>
+                <p className="font-bold text-foreground text-sm">{resource.author || "Anonymous"}</p>
+                <p className="text-xs text-foreground/60">{resource.readTime || "3 min"} read</p>
               </div>
             </div>
             
@@ -86,7 +86,7 @@ export default function FlippableResourceCard({ resource }: Props) {
           </div>
 
           <div className="prose prose-lg prose-headings:font-serif prose-p:font-body prose-a:text-primary hover:prose-a:underline text-foreground/80 leading-relaxed max-w-none relative z-10 whitespace-pre-wrap">
-            {resource.content}
+            {resource.content || "No content provided."}
           </div>
         </div>
 
