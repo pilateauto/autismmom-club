@@ -36,7 +36,7 @@ const CATEGORIES = [
 
 export default function Categories() {
   return (
-    <section className="py-24 px-6 md:px-12 max-w-6xl mx-auto">
+    <section id="explore" className="py-24 px-6 md:px-12 max-w-6xl mx-auto">
       <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-12 text-center md:text-left">Explore the Toolkit</h2>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">

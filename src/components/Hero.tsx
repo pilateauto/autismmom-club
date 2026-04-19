@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Hero() {
   return (
     <section className="relative flex flex-col items-center justify-center min-h-[80vh] px-6 text-center max-w-4xl mx-auto">
@@ -16,12 +18,12 @@ export default function Hero() {
       </p>
       
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
-        <button className="w-full sm:w-auto bg-gradient-accent text-white font-body rounded-full px-8 py-3 hover:opacity-90 transition-all hover:scale-[1.02] active:scale-[0.98]">
+        <Link href="#explore" className="w-full sm:w-auto bg-gradient-accent text-white font-body rounded-full px-8 py-3 hover:opacity-90 transition-all hover:scale-[1.02] active:scale-[0.98] text-center">
           Read the Wins
-        </button>
-        <button className="w-full sm:w-auto bg-surface text-foreground border border-border font-body rounded-full px-8 py-3 hover:bg-surface/80 transition-all">
+        </Link>
+        <Link href="/submit" className="w-full sm:w-auto bg-surface text-foreground border border-border font-body rounded-full px-8 py-3 hover:bg-surface/80 transition-all text-center">
           Share Your Routine
-        </button>
+        </Link>
       </div>
 
       <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-accent w-screen -ml-[calc(50vw-50%)]" />
