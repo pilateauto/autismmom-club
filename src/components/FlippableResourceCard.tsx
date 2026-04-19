@@ -4,28 +4,24 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Share, MessageCircle, ArrowLeft, Send } from "lucide-react";
 import { Resource } from "@/data/resources";
+import { addComment } from "@/app/resource/[slug]/actions";
 
 interface Props {
   resource: Resource;
+  initialComments?: any[];
 }
 
-export default function FlippableResourceCard({ resource }: Props) {
+export default function FlippableResourceCard({ resource, initialComments = [] }: Props) {
   const [isFlipped, setIsFlipped] = useState(false);
-  const [comments, setComments] = useState<{ id: string; author: string; text: string }[]>([
+  const [comments, setComments] = useState<any[]>([
     { id: "1", author: "Jenna T.", text: "This literally saved our mornings. Thank you!" },
-    { id: "2", author: "Lisa M.", text: "Going to try this tomorrow, wish me luck." }
+    { id: "2", author: "Lisa M.", text: "Going to try this tomorrow, wish me luck." },
+    ...initialComments
   ]);
   const [newComment, setNewComment] = useState("");
   const [isCopied, setIsCopied] = useState(false);
 
-  useEffect(() => {
-    const saved = localStorage.getItem("amc_comments_" + resource.slug);
-    if (saved) {
-      try {
-        setComments(JSON.parse(saved));
-      } catch(e) {}
-    }
-  }, [resource.slug]);
+
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -38,17 +34,22 @@ export default function FlippableResourceCard({ resource }: Props) {
     setIsFlipped(!isFlipped);
   };
 
-  const handleAddComment = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newComment.trim()) return;
+  const handleAddComment = async (formData: FormData) => {
+    const text = formData.get("text") as string;
+    if (!text || !text.trim()) return;
     
-    const updated = [
-      ...comments,
-      { id: Date.now().toString(), author: "You", text: newComment }
-    ];
-    setComments(updated);
-    localStorage.setItem("amc_comments_" + resource.slug, JSON.stringify(updated));
+    // Optimistic UI update
+    const optimisticComment = { id: Date.now().toString(), author: "You", text: text };
+    setComments((prev) => [...prev, optimisticComment]);
     setNewComment("");
+    
+    try {
+      await addComment(formData);
+    } catch (err) {
+      console.error(err);
+      // If server fails, remove the optimistic comment
+      setComments((prev) => prev.filter(c => c.id !== optimisticComment.id));
+    }
   };
 
   return (
@@ -145,19 +146,21 @@ export default function FlippableResourceCard({ resource }: Props) {
             )}
           </div>
 
-          <form onSubmit={handleAddComment} className="mt-auto border-t border-border/40 pt-6">
+          <form action={handleAddComment} className="mt-auto border-t border-border/40 pt-6">
+            <input type="hidden" name="slug" value={resource.slug} />
             <div className="flex gap-3">
               <input 
                 type="text" 
+                name="text"
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Add to the conversation..."
-                className="flex-1 rounded-full border border-border/50 bg-surface/50 px-5 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 font-body text-sm shadow-inner"
+                className="flex-1 rounded-2xl border border-border/50 bg-surface/50 px-5 py-4 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 font-body text-sm shadow-inner w-full min-h-[50px]"
               />
               <button 
                 type="submit"
                 disabled={!newComment.trim()}
-                className="bg-gradient-accent text-white rounded-full p-3 shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-[0.98]"
+                className="bg-gradient-accent text-white rounded-2xl px-6 py-4 shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-[0.98]"
               >
                 <Send className="w-5 h-5 ml-0.5" />
               </button>

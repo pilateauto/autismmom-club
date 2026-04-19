@@ -31,6 +31,14 @@ export default async function ResourcePage({ params }: { params: { slug: string 
     }
   }
 
+  // Fetch global comments
+  const supabase = await createClient();
+  const { data: globalComments } = await supabase
+    .from("comments")
+    .select("*")
+    .eq("resource_slug", slug)
+    .order("created_at", { ascending: true });
+
   // 3. If STILL not found, throw 404
   if (!resource) {
     notFound();
@@ -46,7 +54,7 @@ export default async function ResourcePage({ params }: { params: { slug: string 
           Back to {resource.category}
         </Link>
 
-        <FlippableResourceCard resource={resource} />
+        <FlippableResourceCard resource={resource} initialComments={globalComments || []} />
 
       </div>
       <Footer />
