@@ -54,7 +54,7 @@ export default function FlippableResourceCard({ resource }: Props) {
           </div>
 
           <div className="flex gap-2 flex-wrap mb-4 relative z-10">
-            {resource.tags.map(tag => (
+            {(resource.tags || []).map(tag => (
               <span key={tag} className="bg-primary/10 text-primary font-bold px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wider">{tag}</span>
             ))}
           </div>

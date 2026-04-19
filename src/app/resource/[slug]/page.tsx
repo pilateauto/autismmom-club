@@ -7,7 +7,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import FlippableResourceCard from "@/components/FlippableResourceCard";
 
-// export const dynamicParams = true; // this is default
+export const dynamicParams = true;
 
 export default async function ResourcePage({ params }: { params: { slug: string } }) {
   const p = await params;
