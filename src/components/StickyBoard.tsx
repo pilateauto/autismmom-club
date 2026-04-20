@@ -132,7 +132,8 @@ export default function StickyBoard() {
         onMouseMove={handleMouseMove}
         onClick={handleBoardClick}
         className={cn(
-          "w-full h-full overflow-hidden bg-amber-50/50 select-none",
+          "w-full h-full overflow-auto bg-amber-50/50 select-none",
+          "hide-scrollbar",
           placingNote ? "cursor-crosshair" : (isPanning ? "cursor-grabbing" : "cursor-grab")
         )}
       >
