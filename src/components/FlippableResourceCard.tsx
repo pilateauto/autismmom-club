@@ -83,23 +83,23 @@ export default function FlippableResourceCard({ resource, initialComments = [] }
             {resource.title || "Untitled"}
           </h1>
 
-          <div className="flex items-center justify-between border-b border-border/40 pb-8 mb-8 relative z-10">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-border/40 pb-8 mb-8 relative z-10">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-accent flex items-center justify-center text-white font-serif font-bold shadow-inner">
+              <div className="w-10 h-10 rounded-full bg-gradient-accent flex items-center justify-center text-white font-serif font-bold shadow-inner shrink-0">
                 {(resource.author || "?").charAt(0)}
               </div>
-              <div>
-                <p className="font-bold text-foreground text-sm">{resource.author || "Anonymous"}</p>
+              <div className="min-w-0">
+                <p className="font-bold text-foreground text-sm truncate">{resource.author || "Anonymous"}</p>
                 <p className="text-xs text-foreground/60">{resource.readTime || "3 min"} read</p>
               </div>
             </div>
             
-            <div className="flex gap-2">
-              <button onClick={handleFlip} className="text-foreground/50 hover:text-primary transition-colors px-4 py-2 bg-surface rounded-full border border-border/50 hover:shadow-md flex items-center gap-2 font-body text-sm font-semibold">
+            <div className="flex items-center gap-2">
+              <button onClick={handleFlip} className="flex-1 sm:flex-none justify-center text-foreground/50 hover:text-primary transition-colors px-4 py-2 bg-surface rounded-full border border-border/50 hover:shadow-md flex items-center gap-2 font-body text-sm font-semibold">
                 <MessageCircle className="w-4 h-4" />
                 Comments
               </button>
-              <button onClick={handleShare} className="text-foreground/50 hover:text-primary transition-colors p-2 bg-surface rounded-full border border-border/50 hover:shadow-md relative">
+              <button onClick={handleShare} className="text-foreground/50 hover:text-primary transition-colors p-2 bg-surface rounded-full border border-border/50 hover:shadow-md relative shrink-0">
                 <Share className="w-5 h-5" />
                 {isCopied && (
                   <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded shadow pointer-events-none whitespace-nowrap">
@@ -110,7 +110,7 @@ export default function FlippableResourceCard({ resource, initialComments = [] }
             </div>
           </div>
 
-          <div className="prose prose-lg prose-headings:font-serif prose-p:font-body prose-a:text-primary hover:prose-a:underline text-foreground/80 leading-relaxed max-w-none relative z-10 whitespace-pre-wrap">
+          <div className="prose prose-lg md:prose-xl prose-headings:font-serif prose-p:font-body prose-a:text-primary hover:prose-a:underline text-foreground/80 leading-relaxed max-w-none relative z-10 whitespace-pre-wrap" style={{ wordBreak: "break-word" }}>
             {resource.content || "No content provided."}
           </div>
         </div>
