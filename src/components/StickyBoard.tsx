@@ -5,6 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { initialAffirmations, Affirmation, AffirmationColor } from "@/data/affirmations";
 import { Plus, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useDrag } from "@use-gesture/react";
+import { useSpring } from "framer-motion";
+import { useMotionValue, useSpring as useFramerSpring } from "framer-motion";
 
 const colors: Record<AffirmationColor, string> = {
   yellow: "bg-[#fef08a] text-amber-900 border-amber-200 shadow-[#fef08a]/20",
@@ -36,6 +39,28 @@ export default function StickyBoard() {
   
   const containerRef = useRef<HTMLDivElement>(null);
   const boardRef = useRef<HTMLDivElement>(null);
+
+  const x = useMotionValue(-2500 + (typeof window !== "undefined" ? window.innerWidth / 2 : 500));
+  const y = useMotionValue(-2500 + (typeof window !== "undefined" ? window.innerHeight / 2 : 500));
+  const smoothX = useFramerSpring(x, { damping: 50, stiffness: 400 });
+  const smoothY = useFramerSpring(y, { damping: 50, stiffness: 400 });
+
+  // Set up react-use-gesture for dragging the background
+  const bindDrag = useDrag(({ down, movement: [mx, my], offset: [ox, oy], event, tap }) => {
+    // If we're clicking a button or typing, don't drag the background
+    if ((event.target as HTMLElement).closest('button, input, textarea, .sticky-note')) return;
+    
+    setIsPanning(down);
+    
+    if (!placingNote) {
+      x.set(ox);
+      y.set(oy);
+    }
+  }, { 
+    from: () => [x.get(), y.get()],
+    filterTaps: true,
+    bounds: { left: -5000 + (typeof window !== "undefined" ? window.innerWidth : 1000), right: 0, top: -5000 + (typeof window !== "undefined" ? window.innerHeight : 1000), bottom: 0 }
+  });
 
   // Initialize data and scroll position
   useEffect(() => {
@@ -123,24 +148,19 @@ export default function StickyBoard() {
   return (
     <>
       <div 
-        ref={containerRef}
-        onMouseDown={() => {
-          if (!placingNote) setIsPanning(true);
-        }}
-        onMouseUp={() => setIsPanning(false)}
-        onMouseLeave={() => setIsPanning(false)}
-        onMouseMove={handleMouseMove}
-        onClick={handleBoardClick}
         className={cn(
-          "w-full h-full overflow-auto bg-amber-50/50 select-none",
-          "hide-scrollbar",
+          "fixed inset-0 w-full h-full overflow-hidden bg-[#FEFCF7] select-none touch-none",
           placingNote ? "cursor-crosshair" : (isPanning ? "cursor-grabbing" : "cursor-grab")
         )}
+        {...(!placingNote ? bindDrag() : {})}
+        onMouseMove={handleMouseMove}
+        onClick={handleBoardClick}
       >
-        <div 
+        <motion.div 
           ref={boardRef}
-          className="w-[5000px] h-[5000px] relative shadow-inner pointer-events-none"
+          className="w-[5000px] h-[5000px] absolute will-change-transform"
           style={{
+            x: smoothX, y: smoothY,
             backgroundImage: 'radial-gradient(circle, #000000 1px, transparent 1px)',
             backgroundSize: '48px 48px',
             backgroundPosition: '0 0',
@@ -156,6 +176,7 @@ export default function StickyBoard() {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1, rotate: note.rotation }}
                 className={cn(
+                  "sticky-note",
                   "w-64 min-h-[256px] p-6 shadow-md border rounded-sm flex flex-col justify-between absolute z-10",
                   colors[note.color]
                 )}
@@ -197,7 +218,7 @@ export default function StickyBoard() {
               )}
             </motion.div>
           )}
-        </div>
+        </motion.div>
       </div>
 
       {/* Floating Instructions & Add Button */}
