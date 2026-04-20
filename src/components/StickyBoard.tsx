@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { initialAffirmations, Affirmation, AffirmationColor } from "@/data/affirmations";
 import { Plus, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useDrag } from "@use-gesture/react";
+import { useDrag, useWheel } from "@use-gesture/react";
 import { useSpring } from "framer-motion";
 import { useMotionValue, useSpring as useFramerSpring } from "framer-motion";
 
@@ -60,6 +60,29 @@ export default function StickyBoard() {
     from: () => [x.get(), y.get()],
     filterTaps: true,
     bounds: { left: -10000 + (typeof window !== "undefined" ? window.innerWidth : 1000), right: 0, top: -10000 + (typeof window !== "undefined" ? window.innerHeight : 1000), bottom: 0 }
+  });
+
+  // Trackpad / Scroll Wheel Panning
+  const bindWheel = useWheel(({ delta: [dx, dy], event }) => {
+    if ((event.target as HTMLElement).closest('button, input, textarea, .sticky-note')) return;
+    
+    if (!placingNote) {
+      // Subtract the delta from current x/y to pan in the direction of the scroll
+      let newX = x.get() - dx;
+      let newY = y.get() - dy;
+
+      // Enforce bounds
+      const minX = -10000 + (typeof window !== "undefined" ? window.innerWidth : 1000);
+      const minY = -10000 + (typeof window !== "undefined" ? window.innerHeight : 1000);
+
+      newX = Math.max(Math.min(newX, 0), minX);
+      newY = Math.max(Math.min(newY, 0), minY);
+
+      x.set(newX);
+      y.set(newY);
+    }
+  }, {
+    eventOptions: { passive: false }
   });
 
   // Initialize data and scroll position
@@ -152,7 +175,7 @@ export default function StickyBoard() {
           "fixed inset-0 w-full h-full overflow-hidden bg-[#FEFCF7] select-none touch-none",
           placingNote ? "cursor-crosshair" : (isPanning ? "cursor-grabbing" : "cursor-grab")
         )}
-        {...(!placingNote ? bindDrag() : {})}
+        {...(!placingNote ? { ...bindDrag(), ...bindWheel() } : {})}
         onMouseMove={handleMouseMove}
         onClick={handleBoardClick}
       >
