@@ -72,7 +72,7 @@ export default function FlippableResourceCard({ resource, initialComments = [] }
         {/* FRONT OF CARD */}
         <div
           className="bg-white rounded-[40px] border border-border/50 p-8 md:p-16 shadow-2xl relative overflow-hidden"
-          style={{ backfaceVisibility: "hidden" }}
+          style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
         >
           {/* Subtle background glow */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
@@ -128,7 +128,7 @@ export default function FlippableResourceCard({ resource, initialComments = [] }
         {/* BACK OF CARD */}
         <div
           className="bg-white rounded-[40px] border border-border/50 p-8 md:p-12 shadow-2xl absolute inset-0 w-full h-full flex flex-col"
-          style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+          style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
           <div className="flex items-center justify-between mb-8 border-b border-border/40 pb-6">
             <h2 className="text-2xl font-serif text-foreground">Community Comments</h2>
