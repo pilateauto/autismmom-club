@@ -20,10 +20,13 @@ export default async function WallPage() {
       <Nav />
       
       {/* Header Overlay (Floating so it doesn't interrupt the canvas) */}
-      <div className="absolute top-28 left-1/2 -translate-x-1/2 z-20 pointer-events-none text-center bg-background/80 backdrop-blur-md px-8 py-4 rounded-3xl shadow-sm border border-border/50">
-        <h1 className="text-2xl md:text-3xl font-serif text-foreground mb-1">Community Bulletin Board</h1>
-        <p className="text-sm font-body text-foreground/70">
+      <div className="absolute top-24 md:top-28 left-1/2 -translate-x-1/2 z-20 pointer-events-none text-center bg-background/80 backdrop-blur-md px-4 py-3 md:px-8 md:py-4 rounded-3xl shadow-sm border border-border/50 w-[90%] md:w-auto">
+        <h1 className="text-lg md:text-3xl font-serif text-foreground mb-0.5 md:mb-1">Community Bulletin Board</h1>
+        <p className="text-xs md:text-sm font-body text-foreground/70 hidden sm:block">
           Drag the board to pan around. Click '+' to write a note, then pin it anywhere!
+        </p>
+        <p className="text-xs md:text-sm font-body text-foreground/70 sm:hidden">
+          Drag to pan. Click '+' to add a note!
         </p>
       </div>
 
