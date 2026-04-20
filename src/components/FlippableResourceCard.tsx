@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Share, MessageCircle, ArrowLeft, Send } from "lucide-react";
 import { Resource } from "@/data/resources";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { addComment } from "@/app/resource/[slug]/actions";
 
 interface Props {
@@ -33,6 +35,12 @@ export default function FlippableResourceCard({ resource, initialComments = [] }
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
   };
+
+  // Pre-process raw text to enforce markdown line-breaks on lists if users didn't add them
+  const rawContent = resource.content || "No content provided.";
+  const formattedContent = rawContent
+    .replace(/(?<!\n)(?:^|\s)(\d+\.\s)/g, '\n$1') // Force newline before "1. "
+    .replace(/(?<!\n)(?:^|\s)([-*]\s)/g, '\n$1'); // Force newline before "- " or "* "
 
   const handleAddComment = async (formData: FormData) => {
     const text = formData.get("text") as string;
@@ -110,8 +118,10 @@ export default function FlippableResourceCard({ resource, initialComments = [] }
             </div>
           </div>
 
-          <div className="prose prose-lg md:prose-xl prose-headings:font-serif prose-p:font-body prose-a:text-primary hover:prose-a:underline text-foreground/80 leading-relaxed max-w-none relative z-10 whitespace-pre-wrap" style={{ wordBreak: "break-word" }}>
-            {resource.content || "No content provided."}
+          <div className="prose prose-lg md:prose-xl prose-headings:font-serif prose-p:font-body prose-a:text-primary hover:prose-a:underline text-foreground/80 leading-relaxed max-w-none relative z-10" style={{ wordBreak: "break-word" }}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {formattedContent}
+            </ReactMarkdown>
           </div>
         </div>
 
