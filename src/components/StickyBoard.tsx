@@ -40,8 +40,8 @@ export default function StickyBoard() {
   const containerRef = useRef<HTMLDivElement>(null);
   const boardRef = useRef<HTMLDivElement>(null);
 
-  const x = useMotionValue(-2500 + (typeof window !== "undefined" ? window.innerWidth / 2 : 500));
-  const y = useMotionValue(-2500 + (typeof window !== "undefined" ? window.innerHeight / 2 : 500));
+  const x = useMotionValue(-5000 + (typeof window !== "undefined" ? window.innerWidth / 2 : 500));
+  const y = useMotionValue(-5000 + (typeof window !== "undefined" ? window.innerHeight / 2 : 500));
   const smoothX = useFramerSpring(x, { damping: 50, stiffness: 400 });
   const smoothY = useFramerSpring(y, { damping: 50, stiffness: 400 });
 
@@ -59,7 +59,7 @@ export default function StickyBoard() {
   }, { 
     from: () => [x.get(), y.get()],
     filterTaps: true,
-    bounds: { left: -5000 + (typeof window !== "undefined" ? window.innerWidth : 1000), right: 0, top: -5000 + (typeof window !== "undefined" ? window.innerHeight : 1000), bottom: 0 }
+    bounds: { left: -10000 + (typeof window !== "undefined" ? window.innerWidth : 1000), right: 0, top: -10000 + (typeof window !== "undefined" ? window.innerHeight : 1000), bottom: 0 }
   });
 
   // Initialize data and scroll position
@@ -158,7 +158,7 @@ export default function StickyBoard() {
       >
         <motion.div 
           ref={boardRef}
-          className="w-[5000px] h-[5000px] absolute will-change-transform"
+          className="w-[10000px] h-[10000px] absolute will-change-transform"
           style={{
             x: smoothX, y: smoothY,
             backgroundImage: 'radial-gradient(circle, #000000 1px, transparent 1px)',
