@@ -2,6 +2,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { createClient } from "@/utils/supabase/server";
 import AdminApprovalForm from "@/components/AdminApprovalForm";
+import { deleteResource, deleteComment } from "./actions";
 
 export default async function AdminPage() {
   const supabase = await createClient();
@@ -12,6 +13,18 @@ export default async function AdminPage() {
     .select("*")
     .eq("status", "pending_review")
     .order("created_at", { ascending: true });
+
+  // Fetch all published items for moderation
+  const { data: publishedItems } = await supabase
+    .from("resources")
+    .select("*")
+    .eq("status", "published")
+    .order("created_at", { ascending: false });
+
+  const { data: globalComments } = await supabase
+    .from("comments")
+    .select("*")
+    .order("created_at", { ascending: false });
 
   if (error) {
     console.error("Error fetching pending items:", error);
@@ -34,6 +47,8 @@ export default async function AdminPage() {
           </div>
         </div>
 
+        {/* Pending Reviews Queue */}
+        <h2 className="text-xl font-bold text-foreground mb-4">Pending Submissions</h2>
         {items.length === 0 ? (
           <div className="bg-white rounded-3xl p-16 text-center border border-border/50 shadow-sm">
             <h2 className="text-2xl font-serif mb-2 text-foreground">Inbox Zero!</h2>
@@ -60,6 +75,71 @@ export default async function AdminPage() {
             ))}
           </div>
         )}
+
+        {/* Published Content Moderation */}
+        <h2 className="text-xl font-bold text-foreground mt-16 mb-4">Published Resources</h2>
+        <div className="bg-white rounded-3xl p-6 border border-border/50 shadow-sm overflow-x-auto">
+          <table className="w-full text-left text-sm text-foreground/80">
+            <thead>
+              <tr className="border-b border-border/50 text-foreground">
+                <th className="pb-3 px-4 font-bold">Title</th>
+                <th className="pb-3 px-4 font-bold">Category</th>
+                <th className="pb-3 px-4 font-bold">Author</th>
+                <th className="pb-3 px-4 font-bold text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(publishedItems || []).map((pub: any) => (
+                <tr key={pub.id} className="border-b border-border/30 last:border-0 hover:bg-surface/30">
+                  <td className="py-3 px-4 truncate max-w-xs">{pub.title}</td>
+                  <td className="py-3 px-4 uppercase text-xs font-mono">{pub.category}</td>
+                  <td className="py-3 px-4">{pub.author}</td>
+                  <td className="py-3 px-4 text-right">
+                    <form action={deleteResource}>
+                      <input type="hidden" name="id" value={pub.id} />
+                      <input type="hidden" name="category" value={pub.category} />
+                      <button type="submit" className="text-red-500 hover:bg-red-50 px-3 py-1 rounded-md transition-colors text-xs font-bold border border-red-200">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {(!publishedItems || publishedItems.length === 0) && <p className="text-center py-8 text-foreground/50">No published resources yet.</p>}
+        </div>
+
+        {/* Comments Moderation */}
+        <h2 className="text-xl font-bold text-foreground mt-16 mb-4">Community Comments</h2>
+        <div className="bg-white rounded-3xl p-6 border border-border/50 shadow-sm overflow-x-auto">
+          <table className="w-full text-left text-sm text-foreground/80">
+            <thead>
+              <tr className="border-b border-border/50 text-foreground">
+                <th className="pb-3 px-4 font-bold">Comment</th>
+                <th className="pb-3 px-4 font-bold">Author</th>
+                <th className="pb-3 px-4 font-bold">Resource Slug</th>
+                <th className="pb-3 px-4 font-bold text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(globalComments || []).map((c: any) => (
+                <tr key={c.id} className="border-b border-border/30 last:border-0 hover:bg-surface/30">
+                  <td className="py-3 px-4 max-w-sm truncate">{c.text}</td>
+                  <td className="py-3 px-4">{c.author}</td>
+                  <td className="py-3 px-4 font-mono text-xs">{c.resource_slug}</td>
+                  <td className="py-3 px-4 text-right">
+                    <form action={deleteComment}>
+                      <input type="hidden" name="id" value={c.id} />
+                      <input type="hidden" name="resource_slug" value={c.resource_slug} />
+                      <button type="submit" className="text-red-500 hover:bg-red-50 px-3 py-1 rounded-md transition-colors text-xs font-bold border border-red-200">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {(!globalComments || globalComments.length === 0) && <p className="text-center py-8 text-foreground/50">No comments yet.</p>}
+        </div>
+        
 
       </div>
       <Footer />
