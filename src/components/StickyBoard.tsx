@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { initialAffirmations, Affirmation, AffirmationColor } from "@/data/affirmations";
 import { Plus, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { addStickyNote } from "@/app/wall/actions";
 import { useDrag, useWheel } from "@use-gesture/react";
 import { useSpring } from "framer-motion";
 import { useMotionValue, useSpring as useFramerSpring } from "framer-motion";
@@ -25,7 +26,7 @@ const colorOptions: { id: AffirmationColor; class: string }[] = [
   { id: "purple", class: "bg-[#e9d5ff]" },
 ];
 
-export default function StickyBoard() {
+export default function StickyBoard({ initialNotes = initialAffirmations }: { initialNotes?: any[] }) {
   const [notes, setNotes] = useState<Affirmation[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newText, setNewText] = useState("");
@@ -87,26 +88,8 @@ export default function StickyBoard() {
 
   // Initialize data and scroll position
   useEffect(() => {
-    // 1. Load notes from localStorage or fallback to initial
-    const saved = localStorage.getItem("amc_sticky_notes");
-    if (saved) {
-      try {
-        setNotes(JSON.parse(saved));
-      } catch (e) {
-        setNotes(initialAffirmations);
-      }
-    } else {
-      setNotes(initialAffirmations);
-    }
-
-    // 2. Center the 5000x5000 board
-    if (containerRef.current) {
-      const centerX = 2500 - containerRef.current.clientWidth / 2;
-      const centerY = 2500 - containerRef.current.clientHeight / 2;
-      containerRef.current.scrollLeft = centerX;
-      containerRef.current.scrollTop = centerY;
-    }
-  }, []);
+    setNotes(initialNotes);
+  }, [initialNotes]);
 
   const handleAddNote = (e: React.FormEvent) => {
     e.preventDefault();
@@ -144,27 +127,36 @@ export default function StickyBoard() {
     }
   };
 
-  const handleBoardClick = (e: ReactMouseEvent) => {
-    // If panning, ignore clicks
+  const handleBoardClick = async (e: ReactMouseEvent) => {
     if (isPanning) return;
     
-    // If placing a note, lock it in
     if (placingNote && boardRef.current) {
       const rect = boardRef.current.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
       const clickY = e.clientY - rect.top;
 
-      // Save absolute percentage relative to 5000x5000
       const xPercent = (clickX / rect.width) * 100;
       const yPercent = (clickY / rect.height) * 100;
 
-      const newNotesArray = [...notes, { ...placingNote, x: xPercent, y: yPercent }];
-      setNotes(newNotesArray);
+      const finalizedNote = { ...placingNote, x: xPercent, y: yPercent };
       
-      // Persist to localStorage immediately
-      localStorage.setItem("amc_sticky_notes", JSON.stringify(newNotesArray));
-      
+      // Optimistic update
+      setNotes(prev => [...prev, finalizedNote]);
       setPlacingNote(null);
+
+      // Async cloud push
+      try {
+        const fd = new FormData();
+        fd.append("text", finalizedNote.text);
+        fd.append("author", finalizedNote.author || "");
+        fd.append("color", finalizedNote.color);
+        fd.append("x", xPercent.toString());
+        fd.append("y", yPercent.toString());
+        fd.append("rotation", finalizedNote.rotation.toString());
+        await addStickyNote(fd);
+      } catch(err) {
+        console.error("Failed to save note to cloud", err);
+      }
     }
   };
 

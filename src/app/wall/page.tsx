@@ -1,12 +1,20 @@
 import Nav from "@/components/Nav";
 import StickyBoard from "@/components/StickyBoard";
+import { createClient } from "@/utils/supabase/server";
+import { initialAffirmations } from "@/data/affirmations";
 
 export const metadata = {
   title: "Community Bulletin Board - Autism Mom Club",
   description: "Words of encouragement, quick tips, and affirmations from other moms.",
 };
 
-export default function WallPage() {
+export default async function WallPage() {
+  const supabase = await createClient();
+  const { data } = await supabase.from("notes").select("*");
+  const globalNotes = data || [];
+  
+  // Combine local mock data with global cloud data
+  const combinedNotes = [...initialAffirmations, ...globalNotes];
   return (
     <main className="h-screen flex flex-col overflow-hidden bg-amber-50/30">
       <Nav />
@@ -21,7 +29,7 @@ export default function WallPage() {
 
       {/* Endless Interactive Board Area */}
       <div className="flex-1 w-full relative">
-        <StickyBoard />
+        <StickyBoard initialNotes={combinedNotes} />
       </div>
     </main>
   );
