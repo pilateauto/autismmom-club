@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -33,6 +34,7 @@ export default function RootLayout({
         className={`${inter.variable} ${spaceGrotesk.variable} ${sourceSerif.variable} antialiased font-body bg-background text-foreground`}
       >
         {children}
+        <Analytics />
       </body>
     </html>
   );
