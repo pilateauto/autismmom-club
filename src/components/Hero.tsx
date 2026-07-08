@@ -10,7 +10,7 @@ export default function Hero() {
       </div>
       
       <h1 className="text-5xl md:text-7xl font-sans text-foreground leading-tight tracking-tight mb-6">
-        Strategies that actually work.
+        Real wins for real life.
       </h1>
       
       <p className="text-lg md:text-xl font-serif text-foreground/80 max-w-2xl leading-relaxed">
