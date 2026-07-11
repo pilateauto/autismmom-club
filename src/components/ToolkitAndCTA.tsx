@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { AnimatedFeatureCard } from "@/components/ui/feature-card-1";
 import { animate, motion, useMotionValue } from "framer-motion";
-import { ChevronLeft, ChevronRight, HeartHandshake } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const cards = [
@@ -68,7 +68,7 @@ export default function ToolkitAndCTA() {
           
           <div className="flex-1 space-y-6 text-center md:text-left">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white border border-border/50 shadow-sm text-primary mb-2">
-              <HeartHandshake size={32} strokeWidth={1.5} />
+              <img src="/emojis/mom-and-baby.png" alt="Mom and baby" className="w-9 h-9 object-contain" />
             </div>
             <h2 className="text-3xl md:text-4xl font-serif text-foreground">How to use the Toolkit</h2>
             <div className="space-y-4 text-foreground/80 font-serif leading-relaxed">
