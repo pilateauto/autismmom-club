@@ -20,7 +20,7 @@ export const RESOURCES: Resource[] = [
     description: "A list of safe, predictable snacks that never change texture from batch to batch.",
     content: "When dealing with ARFID or extreme picky eating, consistency is everything. A single burnt edge or weird lump can ruin a safe food for months. Here are our go-to brands that are mechanically processed to be exactly the same every single time: \n\n1. Ritz Crackers (Original)\n2. Veggie Straws (Sea Salt)\n3. McDonald's French Fries (specifically because of their strict cooking timers)\n4. Cheerios\n5. Specific brands of puréed pouches.",
     author: "Elena R.",
-    emoji: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Bento%20Box.png",
+    emoji: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Pot%20of%20Food.png",
     tags: ["ARFID", "Snacks", "Safe Foods"],
     readTime: "3 min"
   },
