@@ -1,8 +1,21 @@
+import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { RESOURCES } from "@/data/resources";
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
+
+export async function generateMetadata({ params }: { params: { category: string } }): Promise<Metadata> {
+  const p = await params;
+  const category = p?.category || "";
+  const isRecipe = category === "food";
+  
+  return {
+    icons: isRecipe
+      ? [{ rel: "icon", url: "/recipe-favicon-32.png", sizes: "32x32" }, { rel: "icon", url: "/recipe-favicon.svg", type: "image/svg+xml" }]
+      : undefined,
+  };
+}
 
 export default async function CategoryPage({ params }: { params: { category: string } }) {
   const p = await params;

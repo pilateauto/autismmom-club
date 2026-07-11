@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { RESOURCES } from "@/data/resources";
@@ -9,6 +10,38 @@ import FlippableResourceCard from "@/components/FlippableResourceCard";
 
 export const dynamicParams = true;
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const p = await params;
+  const slug = p?.slug;
+
+  // Check local data first
+  const localResource = RESOURCES.find(r => r.slug === slug);
+  if (localResource?.category === "food") {
+    return {
+      icons: [{ rel: "icon", url: "/recipe-favicon-32.png", sizes: "32x32" }, { rel: "icon", url: "/recipe-favicon.svg", type: "image/svg+xml" }],
+    };
+  }
+
+  // Check Supabase
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("resources")
+      .select("category")
+      .eq("slug", slug)
+      .single();
+    
+    if (data?.category === "food") {
+      return {
+        icons: [{ rel: "icon", url: "/recipe-favicon-32.png", sizes: "32x32" }, { rel: "icon", url: "/recipe-favicon.svg", type: "image/svg+xml" }],
+      };
+    }
+  } catch {}
+
+  // Not a recipe page, use default favicon
+  return {};
+}
 
 export default async function ResourcePage({ params }: { params: { slug: string } }) {
   const p = await params;
