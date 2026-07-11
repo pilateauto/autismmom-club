@@ -24,7 +24,7 @@ const CATEGORIES = [
   },
   {
     title: "Reviews", slug: "reviews",
-    description: "Honest reviews, no affiliate links, no sponsorships",
+    description: "Honest, non-affiliate product reviews",
     emoji: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Star.png"
   },
   {
