@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import { createClient } from "@/utils/supabase/server";
 import AdminApprovalForm from "@/components/AdminApprovalForm";
 import { deleteResource, deleteComment } from "./actions";
+import { deleteThread, deleteReply } from "../discuss/actions";
 
 export default async function AdminPage() {
   const supabase = await createClient();
@@ -26,6 +27,12 @@ export default async function AdminPage() {
     .select("*")
     .order("created_at", { ascending: false });
 
+  // Fetch discussion threads
+  const { data: discussionThreads } = await supabase
+    .from("discussion_threads")
+    .select("*")
+    .order("created_at", { ascending: false });
+
   if (error) {
     console.error("Error fetching pending items:", error);
   }
@@ -36,7 +43,7 @@ export default async function AdminPage() {
     <main className="min-h-screen flex flex-col bg-surface/30">
       <Nav />
       <div className="pt-32 pb-16 px-6 md:px-12 max-w-5xl mx-auto w-full flex-1">
-        
+
         <div className="flex items-center justify-between mb-8 border-b border-border/50 pb-6">
           <div>
             <h1 className="text-3xl font-serif text-foreground mb-2">Admin Dashboard</h1>
@@ -139,7 +146,39 @@ export default async function AdminPage() {
           </table>
           {(!globalComments || globalComments.length === 0) && <p className="text-center py-8 text-foreground/50">No comments yet.</p>}
         </div>
-        
+
+        {/* Discussion Threads Moderation */}
+        <h2 className="text-xl font-bold text-foreground mt-16 mb-4">Discussion Threads</h2>
+        <div className="bg-white rounded-3xl p-6 border border-border/50 shadow-sm overflow-x-auto">
+          <table className="w-full text-left text-sm text-foreground/80">
+            <thead>
+              <tr className="border-b border-border/50 text-foreground">
+                <th className="pb-3 px-4 font-bold">Title</th>
+                <th className="pb-3 px-4 font-bold">Category</th>
+                <th className="pb-3 px-4 font-bold">Author</th>
+                <th className="pb-3 px-4 font-bold">Replies</th>
+                <th className="pb-3 px-4 font-bold text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(discussionThreads || []).map((thread: any) => (
+                <tr key={thread.id} className="border-b border-border/30 last:border-0 hover:bg-surface/30">
+                  <td className="py-3 px-4 truncate max-w-xs">{thread.title}</td>
+                  <td className="py-3 px-4 uppercase text-xs font-mono">{thread.category}</td>
+                  <td className="py-3 px-4">{thread.author}</td>
+                  <td className="py-3 px-4">{thread.reply_count}</td>
+                  <td className="py-3 px-4 text-right">
+                    <form action={deleteThread}>
+                      <input type="hidden" name="slug" value={thread.slug} />
+                      <button type="submit" className="text-red-500 hover:bg-red-50 px-3 py-1 rounded-md transition-colors text-xs font-bold border border-red-200">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {(!discussionThreads || discussionThreads.length === 0) && <p className="text-center py-8 text-foreground/50">No discussion threads yet.</p>}
+        </div>
 
       </div>
       <Footer />
